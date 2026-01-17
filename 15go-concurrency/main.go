@@ -1,32 +1,61 @@
+//  package main
+
+// import (
+//     "fmt"
+//     "time"
+// )
+
+// func main() {
+
+//     c1 := make(chan string)
+//     c2 := make(chan string)
+
+//     go func() {
+//         time.Sleep(1 * time.Second)
+//         c1 <- "one"
+//     }()
+//     go func() {
+//         time.Sleep(2 * time.Second)
+//         c2 <- "two"
+//     }()
+
+//     for range 2 {
+//         select {
+//         case msg1 := <-c1:
+//             fmt.Println("received", msg1)
+//         case msg2 := <-c2:
+//             fmt.Println("received", msg2)
+//         }
+//     }
+// }
+
 package main
 
 import (
-	"fmt"
-	"sync"
-	"time"
+    "fmt"
+    "time"
 )
 
-func printLetters(wg *sync.WaitGroup) {
-	defer wg.Done()
-	for i := 'A'; i <= 'E'; i++ {
-		fmt.Println("Letter: ", string(i))
-		time.Sleep(time.Millisecond * 500)
-	}
-}
+func main() {
 
-func printNumbers(wg *sync.WaitGroup) {
-	defer wg.Done()
-	for i := 1; i <= 5; i++ {
-		fmt.Println("Number: ", i)
-		time.Sleep(time.Millisecond * 500)
-	}
-}
+    c1 := make(chan string)
+    c2 := make(chan string)
 
-func main() {	
-	var wg sync.WaitGroup
-	wg.Add(2)
-	go printLetters(&wg)
-	go printNumbers(&wg)
+    go func() {
+        time.Sleep(1 * time.Second)
+        c1 <- "one"
+    }()
+    go func() {
+        time.Sleep(2 * time.Second)
+        c2 <- "two"
+    }()
 
-	wg.Wait()
+    for range 2 {
+        select {
+        case msg1 := <-c1:
+            fmt.Println("received", msg1)
+        case msg2 := <-c2:
+            fmt.Println("received", msg2)
+        }
+    }
 }
