@@ -7,8 +7,8 @@ import (
 /*
 1. create a class/struct Node, which will consist the key, value, prev, next properties
 2. create a class/struct LRUCache, which will store the capacity, cache, head, tail (if using go then mutex)
-3. Initialize the LRUCache, first check for edge cases like the capicity must be positive -> initilize the head and tail with emtpy Node
-assign head.next to tail head.next = tail, and tail.prev to head tail.prev = head, and return the LRUCache with capcity, cache (which is just map of string), head and tail
+3. Initialize the LRUCache, first check for edge cases like the capicity must be positive -> initilize the head and tail with emtpy Node (-1)
+	assign head.next to tail head.next = tail, and tail.prev to head tail.prev = head, and return the LRUCache with capcity, cache (which is just map of string), head and tail
 4. Create Get func which takes the key as a parameter and will return either node.value or boolean value 
 	4.1 Acquire the lcok for the data consistency and unlock at the end of the OP
 	4.2 check if nodes exists or not, if not exits return nil, and flase, and if exits -> get the cache based on the key lru.cache[key] 
@@ -18,7 +18,7 @@ assign head.next to tail head.next = tail, and tail.prev to head tail.prev = hea
 	5.2 4.2 check if node exits or not, if exits -> get the cache based on the key lru.cache[key] 
 	5.2 move the current cache to the head -> return the node.value or nil
 	5.3 if not exists create a newNode with the key and value
-	5.4 compare the lru cache size with the capacity len(lru.cache) >= lru.capacity, if tre evict the trail (remove the least used value to add the new one)
+	5.4 compare the lru cache size with the capacity len(lru.cache) >= lru.capacity, if true evictTail (remove the least used value to add the new one)
 	5.5 set the lru.cache[key] = newNode -> update the head (movetohead(newNode))
 6. Creaet addtohead func which takes the node as a parameter
 	6.1 node.prev = lru.head
@@ -26,13 +26,14 @@ assign head.next to tail head.next = tail, and tail.prev to head tail.prev = hea
 	6.3 lru.head.next.prev = node
 	6.4	lru.head.prev = node 
 7 Create removeNde func with a node parameter
+	Note: the tail will be -1 because we have initialized tail with (-1) so we have remove the tail.prev, which is the lastNode in the list
 	7.1 node.prev.next = node.prev
 	7.2 node.next.prev = node.next
 8. Creaet evitTail func 
 	8.1 store the last node into a variable lastNode = lru.tail.prev
 	8.2 call removeNode func with lastNode variable
 	8.3 delete the cache with the lastNode key delete(lru.cahce, lastNode.key)
-9. Create moveToHead func with node parameter
+9. Create moveToHead func with node as a parameter
 	9.1 call lru.removeNode with ndoe 
 	9.2 call lru.addToHead with node
 10. Create size func which returns the size of the lruCache
@@ -42,8 +43,9 @@ assign head.next to tail head.next = tail, and tail.prev to head tail.prev = hea
 	11.1 acquire Rlock and unlock at the end
 	11.2 create a empty keys array of string with the same size of the lru cache
 	11.3 iterate over lru.cache and append the key in keys array
+
 	11.4 return the keys array
-	*/
+*/
 
 type Node struct {
 	key   string
