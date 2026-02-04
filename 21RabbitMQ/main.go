@@ -1,12 +1,22 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 
 	"github.com/streadway/amqp"
 )
 
 func main() {
+	mode := flag.String("mode", "producer", "Run as 'producer' or 'consumer'")
+	flag.Parse()
+
+	if *mode == "consumer" {
+		consumerMain()
+		return
+	}
+
+	// Producer mode (default)
 	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
 	if err != nil {
 		fmt.Println(err)
@@ -44,7 +54,7 @@ func main() {
 		false,
 		amqp.Publishing{
 			ContentType: "text/plain",
-			Body: []byte("Hello world"),
+			Body:        []byte("Hello world"),
 		},
 	)
 
