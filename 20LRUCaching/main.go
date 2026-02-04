@@ -20,7 +20,7 @@ import (
 	5.3 if not exists create a newNode with the key and value
 	5.4 compare the lru cache size with the capacity len(lru.cache) >= lru.capacity, if true evictTail (remove the least used value to add the new one)
 	5.5 set the lru.cache[key] = newNode -> update the head (movetohead(newNode))
-6. Creaet addtohead func which takes the node as a parameter
+6. Create addtohead func which takes the node as a parameter
 	6.1 node.prev = lru.head
 	6.2 node.next = lru.head.next
 	6.3 lru.head.next.prev = node
