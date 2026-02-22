@@ -10,7 +10,7 @@ import (
 type Server struct {
 	producer *producer.KafkaProducer
 	consumer *consumer.KafkaConsumer
-	msgCH chan string
+	msgCH    chan string
 }
 
 func NewServer() *Server {
@@ -18,7 +18,7 @@ func NewServer() *Server {
 	return &Server{
 		producer: producer.NewKafkaProducer(""),
 		consumer: consumer.NewConsumer(msgCH),
-		msgCH: msgCH,
+		msgCH:    msgCH,
 	}
 }
 
@@ -27,7 +27,7 @@ func (s *Server) PublishMsg() {
 	defer ticker.Stop()
 	id := 1
 	for t := range ticker.C {
-		msg := fmt.Sprintf("Kfka messsage MessageID: %d, timestamp: ", id, t.Format("20:00:00"))
+		msg := fmt.Sprintf("Kafka message MessageID: %d, timestamp: %s", id, t.Format("15:04:05"))
 		s.producer.Produce(msg)
 		id++
 	}

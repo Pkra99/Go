@@ -23,8 +23,7 @@ func NewKafkaProducer(topic string) *KafkaProducer {
 		panic(err)
 	}
 
-	defer p.Close()
-
+	// Handle delivery reports in the background
 	go func() {
 		for e := range p.Events() {
 			switch ev := e.(type) {
@@ -49,4 +48,9 @@ func (p *KafkaProducer) Produce(msg string) {
 		TopicPartition: kafka.TopicPartition{Topic: &p.topic, Partition: kafka.PartitionAny},
 		Value:          []byte(msg),
 	}, nil)
+}
+
+// Close closes the Kafka producer connection
+func (p *KafkaProducer) Close() {
+	p.producer.Close()
 }

@@ -11,7 +11,7 @@ import (
 type KafkaConsumer struct {
 	consumer *kafka.Consumer
 	topic    string
-	msgCH    chan <- string 
+	msgCH    chan<- string
 }
 
 func NewConsumer(msgCH chan<- string) *KafkaConsumer {
@@ -26,8 +26,6 @@ func NewConsumer(msgCH chan<- string) *KafkaConsumer {
 	if err != nil {
 		panic(err)
 	}
-
-	defer c.Close()
 
 	err = c.SubscribeTopics([]string{cfg.Topic}, nil)
 
@@ -49,6 +47,8 @@ func (c *KafkaConsumer) readMsg() {
 		msg, err := c.consumer.ReadMessage(time.Second)
 		if err == nil {
 			fmt.Printf("Message on %s: %s\n", msg.TopicPartition, string(msg.Value))
+			// Send to channel for processing
+			c.msgCH <- string(msg.Value)
 		} else if !err.(kafka.Error).IsTimeout() {
 			// The client will automatically try to recover from all errors.
 			// Timeout is not considered an error because it is raised by
@@ -57,5 +57,9 @@ func (c *KafkaConsumer) readMsg() {
 			continue
 		}
 	}
+}
 
+// Close closes the Kafka consumer connection
+func (c *KafkaConsumer) Close() {
+	c.consumer.Close()
 }
