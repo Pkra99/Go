@@ -72,7 +72,7 @@ func fanIn(ctx context.Context, sources ...<-chan int) <-chan int {
 				defer wg.Done()
 
 				for {
-					select {
+					select { 
 					case <-ctx.Done():
 						return
 					case val, ok := <-source:
