@@ -18,6 +18,7 @@ type DoublyLinkedListInterface interface{
 	insertValueAtHead(val int)
 	insertValueAtPosition(val int, pos int)
 	deleteValue(val int)
+	deleteAtPosition()
 	deleteHead()
 	deleteTail()
 	length() int
@@ -129,6 +130,12 @@ func (dll *DoublyLinkedList) deleteValue(val int) {
 		}
 		current = current.next
 	}
+
+}
+
+func (dll *DoublyLinkedList) deleteAtPosition() {
+	
+
 
 }
 
